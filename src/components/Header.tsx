@@ -31,7 +31,7 @@ export function Header() {
             ))}
           </nav> */}
 
-          <motion.button
+          {/* <motion.button
             className='md:hidden text-foreground'
             whileTap={{ scale: 0.95 }}>
             <svg width='24' height='24' viewBox='0 0 24 24' fill='currentColor'>
@@ -42,7 +42,7 @@ export function Header() {
                 strokeLinecap='round'
               />
             </svg>
-          </motion.button>
+          </motion.button> */}
         </motion.div>
       </div>
     </header>
