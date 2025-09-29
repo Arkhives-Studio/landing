@@ -1,11 +1,10 @@
+# Landing Page Design
 
-  # Landing Page Design
+This is a code bundle for Landing Page Design. The original project is available at https://www.figma.com/design/lK6gmI3UJh0AxMbwjkMnYt/Landing-Page-Design.
 
-  This is a code bundle for Landing Page Design. The original project is available at https://www.figma.com/design/lK6gmI3UJh0AxMbwjkMnYt/Landing-Page-Design.
+## Running the code
 
-  ## Running the code
-
-  Run `npm i` to install the dependencies.
+Run `npm i` to install the dependencies.
 
 Run `npm run dev` to start the development server.
 
@@ -34,4 +33,3 @@ Deploy the service on Render using the Docker blueprint at `services/email-servi
 ### Frontend integration
 
 The landing page `Hero` form submits email addresses to the microservice via `POST /emails`. Status feedback is displayed to users as the request progresses.
-  
