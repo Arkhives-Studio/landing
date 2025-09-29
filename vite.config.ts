@@ -8,6 +8,12 @@ const basePath = process.env.NODE_ENV === 'production' ? `/${repoName}/` : '/';
 export default defineConfig({
   plugins: [react()],
   base: basePath,
+  define: {
+    // Define environment variables that will be available in the client
+    'import.meta.env.VITE_EMAIL_SERVICE_URL': JSON.stringify(
+      process.env.VITE_EMAIL_SERVICE_URL || 'https://landing-cr56.onrender.com'
+    ),
+  },
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
     alias: {
