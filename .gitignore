@@ -8,3 +8,6 @@ build
 .DS_Store
 .vscode
 .idea
+services/email-service/node_modules
+services/email-service/dist
+services/email-service/.env
