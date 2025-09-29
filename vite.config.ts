@@ -11,7 +11,7 @@ export default defineConfig({
   define: {
     // Define environment variables that will be available in the client
     'import.meta.env.VITE_EMAIL_SERVICE_URL': JSON.stringify(
-      process.env.VITE_EMAIL_SERVICE_URL || 'https://landing-cr56.onrender.com'
+      process.env.VITE_EMAIL_SERVICE_URL,
     ),
   },
   resolve: {
