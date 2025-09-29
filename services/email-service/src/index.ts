@@ -5,6 +5,10 @@ import { Pool } from 'pg';
 import { z } from 'zod';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
+import pino from 'pino';
+import pinoHttp from 'pino-http';
 
 const requiredEnv = ['DATABASE_URL'] as const;
 requiredEnv.forEach((key) => {
@@ -17,6 +21,45 @@ requiredEnv.forEach((key) => {
 
 const app = express();
 const port = Number(process.env.PORT) || 4000;
+
+// Logger with redaction of sensitive fields
+const logger = pino({
+  level: process.env.LOG_LEVEL ?? 'info',
+  redact: {
+    paths: [
+      'req.headers.authorization',
+      'req.headers.cookie',
+      'req.body.email',
+    ],
+    remove: true,
+  },
+});
+app.use(
+  pinoHttp({
+    logger,
+    serializers: {
+      req(req) {
+        return {
+          id: req.id,
+          method: req.method,
+          url: req.url,
+          remoteAddress: req.ip,
+        };
+      },
+    },
+  }),
+);
+
+// Security headers
+app.use(
+  helmet({
+    contentSecurityPolicy:
+      process.env.NODE_ENV === 'production' ? undefined : false,
+  }),
+);
+
+// Small JSON body limit to reduce DoS risk
+app.use(express.json({ limit: '10kb' }));
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -35,26 +78,41 @@ const listEmailsSchema = z.object({
   limit: z.coerce.number().int().positive().max(1000).optional(),
 });
 
-const defaultOrigins = [
-  'http://localhost:3000',
-  'https://arkhives-studio.github.io',
-  'https://arkhives-studio.github.io/landing/',
-];
+const defaultOrigins = ['http://localhost:3000', 'http://localhost:5173'];
 
 const envOrigins =
   process.env.CORS_ORIGIN?.split(',')
     .map((origin) => origin.trim())
     .filter(Boolean) ?? [];
 
-const allowedOrigins = Array.from(new Set([...envOrigins, ...defaultOrigins]));
+const allowedOrigins = Array.from(
+  new Set([
+    ...(process.env.NODE_ENV === 'production'
+      ? envOrigins
+      : [...envOrigins, ...defaultOrigins]),
+  ]),
+);
 
 app.use(
   cors({
-    origin: allowedOrigins.length > 0 ? allowedOrigins : undefined,
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true); // allow non-browser clients
+      return allowedOrigins.includes(origin)
+        ? callback(null, true)
+        : callback(new Error('Not allowed by CORS'));
+    },
+    credentials: false,
   }),
 );
 
-app.use(express.json());
+// Global rate limiter
+const globalLimiter = rateLimit({
+  windowMs: 60_000,
+  max: 60,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.use(globalLimiter);
 
 const swaggerDefinition = {
   openapi: '3.0.3',
@@ -288,7 +346,21 @@ const swaggerDefinition = {
 
 const swaggerSpec = swaggerJsdoc({ definition: swaggerDefinition, apis: [] });
 
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+// Simple bearer token auth for admin-only routes in production
+const requireAdmin: express.RequestHandler = (req, res, next) => {
+  if (process.env.NODE_ENV !== 'production') return next();
+  const token = (req.headers.authorization ?? '').replace(/^Bearer\s+/i, '');
+  if (token && process.env.ADMIN_TOKEN && token === process.env.ADMIN_TOKEN)
+    return next();
+  return res.status(401).json({ error: 'Unauthorized' });
+};
+
+// Expose docs only in non-prod, or behind auth in prod
+if (process.env.NODE_ENV !== 'production') {
+  app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+} else {
+  app.use('/docs', requireAdmin, swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+}
 
 app.get('/health', (_req, res) => {
   res.json({ status: 'ok' });
@@ -321,7 +393,24 @@ app.get('/health', (_req, res) => {
  *       500:
  *         description: Internal server error
  */
-app.post('/emails', async (req, res) => {
+// Stricter rate limit for signup endpoint
+const signupLimiter = rateLimit({
+  windowMs: 10 * 60_000,
+  max: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Optional simple proof-of-work or shared-secret guard
+const requirePow: express.RequestHandler = (req, res, next) => {
+  const powSecret = process.env.POW_SECRET;
+  if (!powSecret) return next();
+  const provided = req.header('x-api-pow');
+  if (provided && provided === powSecret) return next();
+  return res.status(429).json({ error: 'Missing or invalid proof-of-work' });
+};
+
+app.post('/emails', signupLimiter, requirePow, async (req, res) => {
   const parseResult = emailSchema.safeParse(req.body);
   if (!parseResult.success) {
     return res
@@ -341,7 +430,7 @@ app.post('/emails', async (req, res) => {
 
     res.status(201).json({ success: true });
   } catch (error) {
-    console.error('Failed to save email', error);
+    req.log?.error({ msg: 'Failed to save email' });
     res.status(500).json({ error: 'Internal server error' });
   }
 });
@@ -391,7 +480,8 @@ app.post('/emails', async (req, res) => {
        500:
          description: Internal server error
  */
-app.get('/emails', async (req, res) => {
+// Protect email listing in production
+app.get('/emails', requireAdmin, async (req, res) => {
   const parseResult = listEmailsSchema.safeParse(req.query);
   if (!parseResult.success) {
     return res
@@ -399,7 +489,7 @@ app.get('/emails', async (req, res) => {
       .json({ error: 'Invalid query', details: parseResult.error.issues });
   }
 
-  const { limit = 1000 } = parseResult.data;
+  const { limit = 100 } = parseResult.data;
 
   try {
     const result = await pool.query(
@@ -412,7 +502,7 @@ app.get('/emails', async (req, res) => {
 
     res.json({ count: result.rowCount, emails: result.rows });
   } catch (error) {
-    console.error('Failed to fetch emails', error);
+    req.log?.error({ msg: 'Failed to fetch emails' });
     res.status(500).json({ error: 'Internal server error' });
   }
 });
