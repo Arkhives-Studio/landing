@@ -37,7 +37,7 @@ const listEmailsSchema = z.object({
 
 const defaultOrigins = [
   'http://localhost:3000',
-  'https://arkhives-studio.github.io/landing',
+  'https://arkhives-studio.github.io',
   'https://arkhives-studio.github.io/landing/',
 ];
 
