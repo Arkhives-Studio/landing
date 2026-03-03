@@ -8,28 +8,20 @@ Run `npm i` to install the dependencies.
 
 Run `npm run dev` to start the development server.
 
-## Email Signup Service
+## Backend Services
 
-This repository now includes an Express-based microservice that captures emails and stores them in PostgreSQL.
+Backend services (email signup, design partner applications) are hosted separately and are **not** included in this repository. The frontend expects the following environment variables at build time:
 
-### Local development
+- `VITE_EMAIL_SERVICE_URL` -- Email signup API base URL. Defaults to `https://api.arkhivesstudio.com` in production and `http://localhost:4000` in development.
+- `VITE_DESIGN_PARTNER_SERVICE_URL` -- Design Partner application API base URL. Defaults to `https://api.arkhivesstudio.com` in production and `http://localhost:8000` in development.
+
+## Deployment
+
+The site is deployed to GitHub Pages from the `docs/` directory with a custom domain (`landing.arkhivesstudio.com`). To rebuild the production bundle:
 
 ```bash
-# from the repo root
-cd docker
-docker compose up --build
+npm run build
+cp public/404.html docs/404.html
 ```
 
-The command runs both the Postgres database and the API. The API listens on `http://localhost:4000`. The frontend expects the service URL from `VITE_EMAIL_SERVICE_URL`, defaulting to `https://api.arkhivesstudio.com` in production and `http://localhost:4000` in development when not provided.
-
-### Render deployment
-
-Deploy the service on Render using the Docker blueprint at `services/email-service/render.yaml`. Supply the following environment variables in Render:
-
-- `DATABASE_URL` – managed Postgres connection string
-- `PORT` – set to `4000`
-- `CORS_ORIGIN` – allowed origins (e.g. `https://landing.arkhivesstudio.com`)
-
-### Frontend integration
-
-The landing page `Hero` form submits email addresses to the microservice via `POST /emails`. Status feedback is displayed to users as the request progresses.
+Ensure `docs/CNAME` contains `landing.arkhivesstudio.com` after each rebuild.
