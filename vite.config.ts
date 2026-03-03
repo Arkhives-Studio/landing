@@ -2,8 +2,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import path from 'path';
 
-const repoName = 'landing';
-const basePath = process.env.NODE_ENV === 'production' ? `/${repoName}/` : '/';
+const basePath = '/';
 
 export default defineConfig({
   plugins: [react()],
