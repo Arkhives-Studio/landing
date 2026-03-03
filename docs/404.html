@@ -4,15 +4,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Page Not Found</title>
-    <meta http-equiv="refresh" content="0; url=/landing/" />
+    <meta http-equiv="refresh" content="0; url=/" />
   </head>
   <body>
     <script>
-      const redirectTo = window.location.pathname.replace(/^\/landing\//, '');
+      const redirectTo = window.location.pathname;
       const query = window.location.search;
       const hash = window.location.hash;
-      const destination = redirectTo ? `/landing/${redirectTo}${query}${hash}` : `/landing/${query}${hash}`;
-      window.location.replace(destination);
+      
+      // Prevent redirect loop by checking if we're already at root
+      if (redirectTo !== '/' && redirectTo !== '') {
+        sessionStorage.setItem('redirectPath', redirectTo + query + hash);
+        window.location.replace('/');
+      }
     </script>
   </body>
 </html>

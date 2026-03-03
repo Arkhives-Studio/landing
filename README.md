@@ -20,7 +20,7 @@ cd docker
 docker compose up --build
 ```
 
-The command runs both the Postgres database and the API. The API listens on `http://localhost:4000`. The frontend expects the service URL from `VITE_EMAIL_SERVICE_URL`, defaulting to `http://localhost:4000` when not provided.
+The command runs both the Postgres database and the API. The API listens on `http://localhost:4000`. The frontend expects the service URL from `VITE_EMAIL_SERVICE_URL`, defaulting to `https://api.arkhivesstudio.com` in production and `http://localhost:4000` in development when not provided.
 
 ### Render deployment
 
@@ -28,7 +28,7 @@ Deploy the service on Render using the Docker blueprint at `services/email-servi
 
 - `DATABASE_URL` – managed Postgres connection string
 - `PORT` – set to `4000`
-- `CORS_ORIGIN` – allowed origins (e.g. `https://arkhives-studio.github.io/landing`)
+- `CORS_ORIGIN` – allowed origins (e.g. `https://landing.arkhivesstudio.com`)
 
 ### Frontend integration
 
