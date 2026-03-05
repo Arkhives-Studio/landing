@@ -8,6 +8,7 @@ import {
 import { useRef, useState, useEffect, useCallback, useMemo } from 'react';
 import { Button } from './ui/button';
 import { X, Check } from 'lucide-react';
+import { useBeeCollision } from '../context/BeeCollisionContext';
 
 /* ─── TiltCard (spring-physics perspective tilt on hover) ─── */
 interface TiltCardProps {
@@ -463,6 +464,18 @@ function DesignPartnerModal({
 /* ─── Main Section ─── */
 export function DesignPartner() {
   const [modalOpen, setModalOpen] = useState(false);
+  const { registerTarget, unregisterTarget, ripples, clearRipple } =
+    useBeeCollision();
+  const pricingCardRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = pricingCardRef.current;
+    if (!el) return;
+    registerTarget('pricing-card', el);
+    return () => unregisterTarget('pricing-card');
+  }, [registerTarget, unregisterTarget]);
+
+  const cardRipples = ripples.filter((r) => r.id === 'pricing-card');
 
   return (
     <>
@@ -509,30 +522,65 @@ export function DesignPartner() {
 
           <FadeUp delay={0.4}>
             <div
+              ref={pricingCardRef}
               className='border rounded-lg p-8 mb-12 max-w-2xl mx-auto'
               style={{
+                position: 'relative',
+                overflow: 'hidden',
                 backgroundColor: 'rgba(219, 189, 20, 0.12)',
                 borderColor: 'rgba(219, 189, 20, 0.3)',
               }}>
-              <h3 className='text-2xl text-foreground mb-4'>
-                Exclusive Partner Pricing
-              </h3>
-              <p className='text-foreground'>
-                Get a{' '}
-                <span
-                  className='text-3xl text-secondary'
-                  style={{ verticalAlign: 'baseline' }}>
-                  20%
-                </span>{' '}
-                discount on 2 calendar months, with an option to convert at
-                a{' '}
-                <span
-                  className='text-3xl text-secondary'
-                  style={{ verticalAlign: 'baseline' }}>
-                  10%
-                </span>{' '}
-                discount on top of annual discounts.
-              </p>
+              {/* Bee collision ripples */}
+              <AnimatePresence>
+                {cardRipples.map((ripple) => {
+                  const rect = pricingCardRef.current?.getBoundingClientRect();
+                  const localX = rect ? ripple.x - rect.left : 0;
+                  const localY = rect ? ripple.y - rect.top : 0;
+                  return (
+                    <motion.div
+                      key={ripple.key}
+                      initial={{ scale: 0, opacity: 0.6 }}
+                      animate={{ scale: 8, opacity: 0 }}
+                      exit={{}}
+                      transition={{ duration: 0.9, ease: 'easeOut' }}
+                      onAnimationComplete={() => clearRipple(ripple.key)}
+                      style={{
+                        position: 'absolute',
+                        width: 60,
+                        height: 60,
+                        borderRadius: '50%',
+                        backgroundColor: 'rgba(219, 189, 20, 0.45)',
+                        left: localX - 30,
+                        top: localY - 30,
+                        pointerEvents: 'none',
+                        zIndex: 0,
+                      }}
+                    />
+                  );
+                })}
+              </AnimatePresence>
+
+              <div style={{ position: 'relative', zIndex: 1 }}>
+                <h3 className='text-2xl text-foreground mb-4'>
+                  Exclusive Partner Pricing
+                </h3>
+                <p className='text-foreground'>
+                  Get a{' '}
+                  <span
+                    className='text-3xl text-secondary'
+                    style={{ verticalAlign: 'baseline' }}>
+                    20%
+                  </span>{' '}
+                  discount on 2 calendar months, with an option to convert at
+                  a{' '}
+                  <span
+                    className='text-3xl text-secondary'
+                    style={{ verticalAlign: 'baseline' }}>
+                    10%
+                  </span>{' '}
+                  discount on top of annual discounts.
+                </p>
+              </div>
             </div>
           </FadeUp>
 
