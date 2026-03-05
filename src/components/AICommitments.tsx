@@ -49,9 +49,9 @@ export function AICommitments() {
           <path d='M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z' />
         </svg>
       ),
-      title: 'Creator IP Protection',
+      title: 'Litigation Shield',
       description:
-        'All content created on Forge remains 100% owned by creators. We provide legal frameworks and technology to protect your intellectual property rights.',
+        'Built-in copyright-safe IP management ensures all content created on Forge is legally protected. Our litigation shield gives studios confidence to ship without risk.',
     },
     {
       icon: (
@@ -59,9 +59,9 @@ export function AICommitments() {
           <path d='M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z' />
         </svg>
       ),
-      title: 'Ethical AI Development',
+      title: 'Local-First AI Agents',
       description:
-        'Our AI tools enhance creativity rather than replace it. We commit to transparent, creator-centric AI that augments human imagination and skill.',
+        'AI agents run on-device, keeping your data private and your production pipeline fast. No cloud dependency means full control over your creative workflow.',
     },
     {
       icon: (
@@ -69,9 +69,9 @@ export function AICommitments() {
           <path d='M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' />
         </svg>
       ),
-      title: 'Fair Revenue Sharing',
+      title: 'Seamless Tool Integration',
       description:
-        'Creators receive the majority of revenue from their work. Our transparent revenue model ensures sustainable income for all community members.',
+        'Forge connects with the creative tools studios already use, eliminating fragmented workflows and reducing costly context-switching across your pipeline.',
     },
     {
       icon: (
@@ -79,9 +79,9 @@ export function AICommitments() {
           <path d='M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75M13 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0z' />
         </svg>
       ),
-      title: 'Community Governance',
+      title: 'Agentic Game Optimizations',
       description:
-        'Major platform decisions involve community input. Creators and players have a voice in shaping the future of the Arkhives ecosystem.',
+        'Automated agents handle technical optimization so your team can focus on creative work. Accelerated production speeds without sacrificing quality.',
     },
   ];
 
@@ -98,8 +98,8 @@ export function AICommitments() {
             Our Commitments
           </h2>
           <p className='text-xl text-muted max-w-3xl mx-auto'>
-            Building the future of gaming with ethical AI, creator empowerment,
-            and community-first principles.
+            Fixing fragmented workflows with local-first AI, copyright-safe IP
+            management, and seamless creative tool integration.
           </p>
         </motion.div>
 
@@ -121,26 +121,30 @@ export function AICommitments() {
           transition={{ duration: 0.8, delay: 0.8 }}
           viewport={{ once: true }}
           className='mt-16'>
-          <Card className='bg-card/50 backdrop-blur-sm border-primary/20'>
-            <CardContent className='p-8 text-center'>
+          <Card className='relative overflow-hidden bg-card/50 backdrop-blur-sm border-primary/20'>
+            <motion.div
+              className='absolute inset-0 bg-gradient-to-r from-transparent via-primary/20 to-transparent'
+              animate={{ x: ['-100%', '100%'] }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                repeatDelay: 2,
+                ease: 'easeInOut',
+              }}
+              style={{
+                width: '200%',
+                height: '100%',
+                transform: 'skewX(-25deg)',
+              }}
+            />
+            <CardContent className='p-8 text-center relative z-10'>
               <h3 className='text-2xl mb-4 text-foreground'>
-                Join the Movement
+                Built for Studios
               </h3>
               <p className='text-muted mb-6 max-w-2xl mx-auto'>
-                Be part of a gaming ecosystem that values creativity, fairness,
-                and innovation. Together, we're building something
-                unprecedented.
+                Forge is purpose-built for Unreal Engine AA game studios ready
+                to accelerate production without compromising creative control.
               </p>
-              {/* <motion.a
-                href="#"
-                className="inline-flex items-center gap-2 text-primary hover:text-primary/80 transition-colors"
-                whileHover={{ x: 5 }}
-              >
-                Read our full manifesto
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M14 6l6 6-6 6M4 12h12"/>
-                </svg>
-              </motion.a> */}
             </CardContent>
           </Card>
         </motion.div>

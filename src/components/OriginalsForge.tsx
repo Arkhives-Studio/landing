@@ -226,10 +226,10 @@ export function OriginalsForge() {
                       Forge Platform
                     </h3>
                     <p className='text-muted mb-6'>
-                      Empower your creativity with comprehensive development
-                      tools. Build games, interactive experiences, and cinematic
-                      content using Unreal Engine 5+. Perfect for film, TV, and
-                      movie production studios.
+                      Arkhives Studio presents Forge, a specialized Agentic
+                      system designed to fix the fragmented and costly
+                      workflows currently hindering Unreal Engine AA game
+                      studios.
                     </p>
                   </div>
 
@@ -237,31 +237,31 @@ export function OriginalsForge() {
                     <div className='flex items-center gap-3'>
                       <div className='w-2 h-2 bg-secondary rounded-full'></div>
                       <span className='text-sm text-muted'>
-                        No-code game builder
+                        Local-first AI agents for accelerated production
                       </span>
                     </div>
                     <div className='flex items-center gap-3'>
                       <div className='w-2 h-2 bg-secondary rounded-full'></div>
                       <span className='text-sm text-muted'>
-                        Unreal Engine 5+ integration
+                        "Litigation shield" for copyright-safe IP management
                       </span>
                     </div>
                     <div className='flex items-center gap-3'>
                       <div className='w-2 h-2 bg-secondary rounded-full'></div>
                       <span className='text-sm text-muted'>
-                        Film, TV & movie production tools
+                        Seamless integration with existing creative tools
                       </span>
                     </div>
                     <div className='flex items-center gap-3'>
                       <div className='w-2 h-2 bg-secondary rounded-full'></div>
                       <span className='text-sm text-muted'>
-                        Advanced scripting & pipeline tools
+                        Agentic Game Optimizations
                       </span>
                     </div>
                     <div className='flex items-center gap-3'>
                       <div className='w-2 h-2 bg-secondary rounded-full'></div>
                       <span className='text-sm text-muted'>
-                        Revenue sharing program
+                        Unreal Engine 5+ pipeline integration
                       </span>
                     </div>
                   </div>

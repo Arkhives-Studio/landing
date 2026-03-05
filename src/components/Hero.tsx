@@ -104,8 +104,9 @@ export function Hero() {
             <span className='text-primary'>Powered by Creators.</span>
           </h1>
           <p className='text-xl md:text-2xl text-muted mb-8'>
-            Arkhives Originals delivers premium gaming experiences while Forge
-            empowers creators to build the future of interactive entertainment.
+            Play handcrafted games across platforms through Arkhives Originals.
+            Accelerate your studio's production with Forge — local-first AI
+            agents built for Unreal Engine.
           </p>
         </motion.div>
 
