@@ -1,5 +1,6 @@
 import { motion, useAnimationFrame } from "motion/react";
 import { useEffect, useState, useRef } from "react";
+import { useBeeCollision } from "../context/BeeCollisionContext";
 
 interface BeeData {
   id: number;
@@ -23,6 +24,9 @@ interface BeeData {
 export function FlyingBees() {
   const [bees, setBees] = useState<BeeData[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
+  const { getTargets, fireHit } = useBeeCollision();
+  // tracks which bee-target pairs are currently overlapping to avoid repeat hits
+  const insideRef = useRef<Set<string>>(new Set());
 
   useEffect(() => {
     // Initialize bees starting from random sides and corners of the screen
@@ -164,6 +168,45 @@ export function FlyingBees() {
         // Update position
         newBee.x += newBee.vx;
         newBee.y += newBee.vy;
+
+        // Collision with registered card targets
+        for (const target of getTargets()) {
+          const rect = target.el.getBoundingClientRect();
+          const hitKey = `${newBee.id}-${target.id}`;
+          const inside =
+            newBee.x >= rect.left &&
+            newBee.x <= rect.right &&
+            newBee.y >= rect.top &&
+            newBee.y <= rect.bottom;
+
+          if (inside && !insideRef.current.has(hitKey)) {
+            insideRef.current.add(hitKey);
+            fireHit(target.id, newBee.x, newBee.y);
+
+            // Reflect off nearest edge
+            const fromLeft   = newBee.x - rect.left;
+            const fromRight  = rect.right - newBee.x;
+            const fromTop    = newBee.y - rect.top;
+            const fromBottom = rect.bottom - newBee.y;
+            const minDist = Math.min(fromLeft, fromRight, fromTop, fromBottom);
+
+            if (minDist === fromLeft) {
+              newBee.vx = -Math.abs(newBee.vx);
+              newBee.x = rect.left - 1;
+            } else if (minDist === fromRight) {
+              newBee.vx = Math.abs(newBee.vx);
+              newBee.x = rect.right + 1;
+            } else if (minDist === fromTop) {
+              newBee.vy = -Math.abs(newBee.vy);
+              newBee.y = rect.top - 1;
+            } else {
+              newBee.vy = Math.abs(newBee.vy);
+              newBee.y = rect.bottom + 1;
+            }
+          } else if (!inside) {
+            insideRef.current.delete(hitKey);
+          }
+        }
 
         // Bounce off edges
         if (newBee.x < 0 || newBee.x > window.innerWidth) {
