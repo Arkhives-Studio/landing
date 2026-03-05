@@ -1,6 +1,6 @@
-# Landing Page Design
+# Arkhives Studio — Landing Page
 
-This is a code bundle for Landing Page Design. The original project is available at https://www.figma.com/design/lK6gmI3UJh0AxMbwjkMnYt/Landing-Page-Design.
+Marketing landing page for [Arkhives Studio](https://arkhivesstudio.com), introducing Arkhives Originals and the Forge Agentic Platform. Hosted at [landing.arkhivesstudio.com](https://landing.arkhivesstudio.com).
 
 ## Running the code
 

@@ -7,22 +7,25 @@ import { AICommitments } from "./components/AICommitments";
 import { Footer } from "./components/Footer";
 import { HoneycombBackground } from "./components/HoneycombBackground";
 import { FlyingBees } from "./components/FlyingBees";
+import { BeeCollisionProvider } from "./context/BeeCollisionContext";
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-background relative">
-      <HoneycombBackground />
-      <FlyingBees />
-      
-      <div className="relative z-10">
-        <Header />
-        <Hero />
-        <DesignPartner />
-        <OriginalsForge />
-        <CompetitivePlay />
-        <AICommitments />
-        <Footer />
+    <BeeCollisionProvider>
+      <div className="min-h-screen bg-background relative">
+        <HoneycombBackground />
+        <FlyingBees />
+
+        <div className="relative z-10">
+          <Header />
+          <Hero />
+          <DesignPartner />
+          <OriginalsForge />
+          <CompetitivePlay />
+          <AICommitments />
+          <Footer />
+        </div>
       </div>
-    </div>
+    </BeeCollisionProvider>
   );
 }

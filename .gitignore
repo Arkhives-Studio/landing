@@ -11,3 +11,4 @@ build
 services/email-service/node_modules
 services/email-service/dist
 services/email-service/.env
+.playwright-cli/
