@@ -12,8 +12,8 @@ Run `npm run dev` to start the development server.
 
 Backend services (email signup, design partner applications) are hosted separately and are **not** included in this repository. The frontend expects the following environment variables at build time:
 
-- `VITE_EMAIL_SERVICE_URL` -- Email signup API base URL. Defaults to `https://api.arkhivesstudio.com` in production and `http://localhost:4000` in development.
-- `VITE_DESIGN_PARTNER_SERVICE_URL` -- Design Partner application API base URL. Defaults to `https://api.arkhivesstudio.com` in production and `http://localhost:8000` in development.
+- `VITE_EMAIL_SERVICE_URL` -- Email signup API base URL. Defaults to `https://email-service-aqls.onrender.com` in production and `http://localhost:4000` in development.
+- `VITE_DESIGN_PARTNER_SERVICE_URL` -- Design Partner application API base URL. Defaults to `https://design-partner-service.onrender.com` in production and `http://localhost:8000` in development.
 
 ## Deployment
 

@@ -118,7 +118,7 @@ function DesignPartnerModal({
 
   const apiBaseUrl = useMemo(() => {
     const fallback = import.meta.env.PROD
-      ? 'https://api.arkhivesstudio.com'
+      ? 'https://design-partner-service.onrender.com'
       : 'http://localhost:8000';
     const configured =
       import.meta.env.VITE_DESIGN_PARTNER_SERVICE_URL ?? fallback;

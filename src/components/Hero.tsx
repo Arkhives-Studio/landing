@@ -46,8 +46,8 @@ export function Hero() {
   const [statusMessage, setStatusMessage] = useState('');
 
   const apiBaseUrl = useMemo(() => {
-    const fallback = import.meta.env.PROD 
-      ? 'https://api.arkhivesstudio.com' // Replace with your actual production API URL if different
+    const fallback = import.meta.env.PROD
+      ? 'https://email-service-aqls.onrender.com'
       : 'http://localhost:4000';
     const configured = import.meta.env.VITE_EMAIL_SERVICE_URL ?? fallback;
     return configured.replace(/\/$/, '');
